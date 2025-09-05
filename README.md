@@ -2,8 +2,6 @@
 
 The SfTreeView allows you to bind ItemTemplate to the reactive UI ViewModel which is a composable and cross-platform model-view-viewmodel framework for all .NET platforms.
 
-**[View document in Syncfusion Xamarin Knowledge base](https://www.syncfusion.com/kb/12181/how-to-bind-data-using-reactive-mvvm-in-xamarin-forms-treeview-sftreeview)**
-
 ## Sample
 
 To achieve this, follow the below steps:
@@ -14,162 +12,53 @@ STEP 2: Create ViewModel which should implement ReactiveObject.
 ```csharp
 public class ViewModel : ReactiveObject
 {
-    #region Fields
- 
     private ObservableCollection<FileManager> imageNodeInfo;
- 
-    #endregion
- 
-    #region Constructor
- 
+    public ObservableCollection<FileManager> ImageNodeInfo
+    {
+        get => imageNodeInfo;
+        set => this.RaiseAndSetIfChanged(ref imageNodeInfo, value);
+    }
+
     public ViewModel()
     {
         GenerateSource();
     }
- 
-    #endregion
- 
-    #region Properties
- 
-    public ObservableCollection<FileManager> ImageNodeInfo
-    {
-        get { return imageNodeInfo; }
-        set { this.RaiseAndSetIfChanged(ref imageNodeInfo, value); }
-    }
- 
-    #endregion
-    #region Generate Source
+
     private void GenerateSource()
     {
-        var nodeImageInfo = new ObservableCollection<FileManager>();
-        Assembly assembly = typeof(MainPage).GetTypeInfo().Assembly;
-        var doc = new FileManager() { ItemName = "Documents", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
-        var download = new FileManager() { ItemName = "Downloads", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
-        var mp3 = new FileManager() { ItemName = "Music", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
-        var pictures = new FileManager() { ItemName = "Pictures", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
-        var video = new FileManager() { ItemName = "Videos", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
- 
-        var pollution = new FileManager() { ItemName = "Environmental Pollution.docx", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_word.png", assembly) };
-        var globalWarming = new FileManager() { ItemName = "Global Warming.ppt", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_ppt.png", assembly) };
-        var sanitation = new FileManager() { ItemName = "Sanitation.docx", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_word.png", assembly) };
-        var socialNetwork = new FileManager() { ItemName = "Social Network.pdf", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_pdf.png", assembly) };
-        var youthEmpower = new FileManager() { ItemName = "Youth Empowerment.pdf", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_pdf.png", assembly) };
- 
-        var games = new FileManager() { ItemName = "Game.exe", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_exe.png", assembly) };
-        var tutorials = new FileManager() { ItemName = "Tutorials.zip", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_zip.png", assembly) };
-        var typeScript = new FileManager() { ItemName = "TypeScript.7z", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_zip.png", assembly) };
-        var uiGuide = new FileManager() { ItemName = "UI-Guide.pdf", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_pdf.png", assembly) };
- 
-        var song = new FileManager() { ItemName = "Gouttes", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_mp3.png", assembly) };
- 
-        var camera = new FileManager() { ItemName = "Camera Roll", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_folder.png", assembly) };
-        var stone = new FileManager() { ItemName = "Stone.jpg", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_png.png", assembly) };
-        var wind = new FileManager() { ItemName = "Wind.jpg", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_png.png", assembly) };
- 
-        var img0 = new FileManager() { ItemName = "WIN_20160726_094117.JPG", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_img0.png", assembly) };
-        var img1 = new FileManager() { ItemName = "WIN_20160726_094118.JPG", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_img1.png", assembly) };
- 
-        var video1 = new FileManager() { ItemName = "Naturals.mp4", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_video.png", assembly) };
-        var video2 = new FileManager() { ItemName = "Wild.mpeg", ImageIcon = ImageSource.FromResource("TreeViewXamarin.Icons.treeview_video.png", assembly) };
- 
-        doc.SubFiles = new ObservableCollection<FileManager>
-        {
-            pollution,
-            globalWarming,
-            sanitation,
-            socialNetwork,
-            youthEmpower
-        };
- 
-        download.SubFiles = new ObservableCollection<FileManager>
-        {
-            games,
-            tutorials,
-            typeScript,
-            uiGuide
-        };
- 
-        mp3.SubFiles = new ObservableCollection<FileManager>
-        {
-            song
-        };
- 
-        pictures.SubFiles = new ObservableCollection<FileManager>
-        {
-            camera,
-            stone,
-            wind
-        };
-        camera.SubFiles = new ObservableCollection<FileManager>
-        {
-            img0,
-            img1
-        };
- 
-        video.SubFiles = new ObservableCollection<FileManager>
-        {
-            video1,
-            video2
-        };
- 
-        nodeImageInfo.Add(doc);
-        nodeImageInfo.Add(download);
-        nodeImageInfo.Add(mp3);
-        nodeImageInfo.Add(pictures);
-        nodeImageInfo.Add(video);
-        imageNodeInfo = nodeImageInfo;
+        // Populate imageNodeInfo with FileManager items,
+        // each having ItemName, ImageIcon (ImageSource), and SubFiles
     }
-    #endregion
 }
 ```
 
 STEP 3: ContentPage should inherit from ReactiveContentPage<TViewModel> and we are going to use ReactiveUI Binding to bind our ViewModel to our View.
 ### XAML
 ```xaml
-<ContentPage.Content>
-    <syncfusion:SfTreeView x:Name="treeView"
-                       ItemHeight="40"
-                       Indentation="15"
-                       ExpanderWidth="40"
-                       ChildPropertyName="SubFiles"
-                       ItemTemplateContextType="Node"
-                       ItemsSource="{Binding ImageNodeInfo}"
-                        >
-        <syncfusion:SfTreeView.ItemTemplate>
-            <DataTemplate>
-                <Grid x:Name="grid" RowSpacing="0" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="1" />
-                    </Grid.RowDefinitions>
-                    <Grid RowSpacing="0" Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid Padding="5,5,5,5">
-                            <Image Source="{Binding Content.ImageIcon}"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"
-                               HeightRequest="35" 
-                               WidthRequest="35"/>
-                        </Grid>
-                        <Grid Grid.Column="1"              
-                          RowSpacing="1"
-                          Padding="1,0,0,0"
-                          VerticalOptions="Center">
-                            <Label LineBreakMode="NoWrap"
-                               Text="{Binding Content.ItemName}"
-                               VerticalTextAlignment="Center">
-                            </Label>
-                        </Grid>
-                    </Grid>
-                    <StackLayout Grid.Row="1"/>
-                </Grid>
-            </DataTemplate>
-        </syncfusion:SfTreeView.ItemTemplate>
-    </syncfusion:SfTreeView>
-</ContentPage.Content>
+<syncfusion:SfTreeView x:Name="treeView"
+    ItemHeight="40"
+    Indentation="15"
+    ExpanderWidth="40"
+    ChildPropertyName="SubFiles"
+    ItemsSource="{Binding ImageNodeInfo}">
+    <syncfusion:SfTreeView.ItemTemplate>
+        <DataTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0"
+                    Source="{Binding Content.ImageIcon}"
+                    HeightRequest="35"
+                    WidthRequest="35"/>
+                <Label Grid.Column="1"
+                    Text="{Binding Content.ItemName}" 
+                    VerticalOptions="Center"/>
+            </Grid>
+        </DataTemplate>
+    </syncfusion:SfTreeView.ItemTemplate>
+</syncfusion:SfTreeView>
 ```
 STEP 4: View can be connected in one-way dependent manner to the ViewModel through bindings. You can set the BindingContext for the SfTreeView in MainPage.cs itself in code behind like below.
 ### C#
